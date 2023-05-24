@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.dentistaclean.dentista.model.entities.Category;
 import com.dentistaclean.dentista.model.entities.Order;
+import com.dentistaclean.dentista.model.entities.Product;
 import com.dentistaclean.dentista.model.entities.User;
 import com.dentistaclean.dentista.model.entities.enuns.OrderStatus;
 import com.dentistaclean.dentista.model.repositories.CategoryRepository;
 import com.dentistaclean.dentista.model.repositories.OrderRepository;
+import com.dentistaclean.dentista.model.repositories.ProductRepository;
 import com.dentistaclean.dentista.model.repositories.UserRepository;
 
 @Configuration
@@ -26,6 +28,8 @@ public class TesConfig implements CommandLineRunner{
 	private OrderRepository orderRepository;
 	@Autowired
 	private CategoryRepository categoryRepository;
+	@Autowired
+	private ProductRepository productRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -40,10 +44,18 @@ public class TesConfig implements CommandLineRunner{
 		Category cat1 = new Category(null, "Eleetrodomestico");
 		Category cat2 = new Category(null, "Tecnologia");
 		Category cat3 = new Category(null, "Computadores");
-		
 		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3));
 		
+		Product p1 = new Product(null, "Acer 16Gb120G", "Notebook", 1850.0, null);
+		Product p2 = new Product(null, "Asus 32Gb500Gb", "Notebook hightec", 3690.99, null);
+		Product p3 = new Product(null, "Fone de ouvido samsung A1", "Fone de ouvido original celular samsung", 17.99, null);
+		productRepository.saveAll(Arrays.asList(p1, p2, p3));
 		
+		p1.getCategories().add(cat3);
+		p2.getCategories().add(cat3);
+		p3.getCategories().add(cat1);
+		
+		productRepository.saveAll(Arrays.asList(p1, p2, p3));
 	}
 
 }
