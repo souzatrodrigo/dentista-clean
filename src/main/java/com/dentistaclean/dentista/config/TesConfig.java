@@ -10,10 +10,12 @@ import org.springframework.context.annotation.Profile;
 
 import com.dentistaclean.dentista.model.entities.Category;
 import com.dentistaclean.dentista.model.entities.Order;
+import com.dentistaclean.dentista.model.entities.OrderItem;
 import com.dentistaclean.dentista.model.entities.Product;
 import com.dentistaclean.dentista.model.entities.User;
 import com.dentistaclean.dentista.model.entities.enuns.OrderStatus;
 import com.dentistaclean.dentista.model.repositories.CategoryRepository;
+import com.dentistaclean.dentista.model.repositories.OrderItemRepository;
 import com.dentistaclean.dentista.model.repositories.OrderRepository;
 import com.dentistaclean.dentista.model.repositories.ProductRepository;
 import com.dentistaclean.dentista.model.repositories.UserRepository;
@@ -30,6 +32,8 @@ public class TesConfig implements CommandLineRunner{
 	private CategoryRepository categoryRepository;
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private OrderItemRepository itemRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -38,8 +42,11 @@ public class TesConfig implements CommandLineRunner{
 		User u2 = new User(null, "Mirelle Santana", "mirelle.santana@gmail.com", "986646400", "Gerais1234");
 		userRepository.saveAll(Arrays.asList(u1, u2));
 		
-		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), u2, OrderStatus.CANCELED);
-		orderRepository.saveAll(Arrays.asList(o1));
+		Order o1 = new Order(null, Instant.parse("2023-05-20T19:53:07Z"), u2, OrderStatus.CANCELED);
+		Order o2 = new Order(null, Instant.parse("2022-06-20T19:53:07Z"), u2, OrderStatus.DELIVERED);
+		Order o3 = new Order(null, Instant.parse("2021-07-20T19:53:07Z"), u2, OrderStatus.PAID);
+		Order o4 = new Order(null, Instant.parse("2023-12-20T19:53:07Z"), u2, OrderStatus.DELIVERED);
+		orderRepository.saveAll(Arrays.asList(o1, o2, o3, o4));
 		
 		Category cat1 = new Category(null, "Eleetrodomestico");
 		Category cat2 = new Category(null, "Tecnologia");
@@ -56,6 +63,12 @@ public class TesConfig implements CommandLineRunner{
 		p3.getCategories().add(cat1);
 		
 		productRepository.saveAll(Arrays.asList(p1, p2, p3));
+		
+		OrderItem oi1 = new OrderItem(p1, o4, 2, p1.getPrice());
+		OrderItem oi2 = new OrderItem(p3, o4, 3, p1.getPrice());
+		
+		itemRepository.saveAll(Arrays.asList(oi1, oi2));
+		
 	}
 
 }

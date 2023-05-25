@@ -2,7 +2,9 @@ package com.dentistaclean.dentista.model.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.dentistaclean.dentista.model.entities.enuns.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,6 +33,10 @@ public class Order implements Serializable{
 	
 	private Integer orderStatus;
 	
+	@OneToMany(mappedBy = "id.order")
+	private Set<OrderItem> orderItems = new HashSet<>();
+	
+
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	@JsonIgnore
@@ -79,6 +86,10 @@ public class Order implements Serializable{
 		if(orderStatus != null) {
 			this.orderStatus = orderStatus.getCode();
 		}
+	}
+
+	public Set<OrderItem> getOrderItems() {
+		return orderItems;
 	}
 
 	@Override

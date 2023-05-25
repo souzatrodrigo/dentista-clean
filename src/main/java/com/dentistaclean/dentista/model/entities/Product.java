@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,6 +35,9 @@ public class Product implements Serializable {
 	@JsonIgnore
 	private Set<Category> categories = new HashSet<>();
 
+	@OneToMany(mappedBy = "id.product")
+	private Set<OrderItem> items = new HashSet<>();
+	
 	public Product() {
 	}
 
@@ -95,7 +99,18 @@ public class Product implements Serializable {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
-
+	
+	@JsonIgnore
+	public Set<Order> getOders(){
+		
+		Set<Order> orders = new HashSet<>();
+		for(OrderItem x : items){
+			orders.add(x.getOrder());
+		}
+		
+		return orders;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
