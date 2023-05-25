@@ -69,9 +69,9 @@ public class TesConfig implements CommandLineRunner{
 		OrderItem oi2 = new OrderItem(p3, o4, 3, p1.getPrice());
 		OrderItem oi3 = new OrderItem(p2, o3, 5, p2.getPrice());
 		
-		itemRepository.saveAll(Arrays.asList(oi1, oi2, o3));
+		itemRepository.saveAll(Arrays.asList(oi1, oi2, oi3));
 		
-		Payment pay1 = new Payment(null, Instant.parse("2021-07-20T19:53:07Z"), o3);
+		Payment pay1 = new Payment(null, Instant.parse("2021-07-20T21:53:07Z"), o3);
 		
 		o3.setPayment(pay1);
 		orderRepository.save(o3);
