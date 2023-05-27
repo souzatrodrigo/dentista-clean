@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.dentistaclean.dentista.model.entities.User;
 import com.dentistaclean.dentista.model.repositories.UserRepository;
+import com.dentistaclean.dentista.model.services.exceptions.DatabaseException;
 import com.dentistaclean.dentista.model.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -35,18 +37,24 @@ public class UserService {
 	}
 
 	public void delete(Long id) {
-
-		Optional<User> user = repository.findById(id);
-
-		repository.delete(user.get());
+		
+		User user = findById(id);
+		
+		try {
+			repository.delete(user);
+		
+		} catch(DataIntegrityViolationException e) {
+			 throw new DatabaseException(e.getMessage()); 
+		}
+		
 	}
 
 	public User update(User obj, Long id) {
 
-		Optional<User> user = repository.findById(id);
-		updateData(user.get(), obj);
+		User user = findById(id);
+		updateData(user, obj);
 
-		return user.get();
+		return user;
 	}
 
 	private void updateData(User user, User obj) {
@@ -56,7 +64,6 @@ public class UserService {
 			user.setEmail(obj.getEmail());
 			user.setPhone(obj.getPhone());
 		}
-
 	}
-
+	
 }
