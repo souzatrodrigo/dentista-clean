@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import com.dentistaclean.dentista.model.entities.User;
 import com.dentistaclean.dentista.model.repositories.UserRepository;
 import com.dentistaclean.dentista.model.services.exceptions.DatabaseException;
+import com.dentistaclean.dentista.model.services.exceptions.ObjectNotFound;
 import com.dentistaclean.dentista.model.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -50,16 +53,22 @@ public class UserService {
 	}
 
 	public User update(User obj, Long id) {
-
-		User user = findById(id);
-		updateData(user, obj);
-
-		return user;
+		try {
+			User user = findById(id);
+			
+			updateData(user, obj);
+	
+			return user;
+		}catch(EntityNotFoundException  e) {
+			
+			throw new ObjectNotFound(e.getMessage()); 
+			
+		}
 	}
 
 	private void updateData(User user, User obj) {
 
-		if (obj != null) {
+		if (obj != null){
 			user.setName(obj.getName());
 			user.setEmail(obj.getEmail());
 			user.setPhone(obj.getPhone());
